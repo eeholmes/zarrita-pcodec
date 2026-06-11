@@ -4,7 +4,7 @@ Optional zarrita-compatible `pcodec` codec extension package.
 
 ```ts
 import { registry } from "zarrita";
-import { registerPCodec } from "zarrita-pcodec";
+import { registerPCodec } from "@eeholmes/zarrita-pcodec";
 
 registerPCodec(registry);
 ```
