@@ -1,0 +1,35 @@
+{
+  "name": "@eeholmes/zarrita-pcodec",
+  "version": "0.1.0",
+  "description": "Optional zarrita-compatible pcodec codec extension package",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./PCodec": "./dist/PCodec.js",
+    "./registerPCodec": "./dist/registerPCodec.js"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json && node scripts/copy-wasm.mjs",
+    "prepack": "npm run build",
+    "pretest": "npm run build",
+    "test": "node --test test/pcodec.test.js"
+  },
+  "peerDependencies": {
+    "zarrita": "^0.7.3"
+  },
+  "peerDependenciesMeta": {
+    "zarrita": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.8.0"
+  }
+}
