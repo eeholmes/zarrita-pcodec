@@ -1,10 +1,10 @@
 export interface CodecRegistryLike {
-  set(
-    name: string,
-    factory: () => Promise<unknown>
-  ): void;
+  set(name: string, factory: () => Promise<unknown>): void;
 }
 
 export function registerPCodec(registry: CodecRegistryLike) {
-  registry.set("pcodec", () => import("./PCodec").then((m) => m.default));
+  const factory = () => import("./PCodec").then((m) => m.default);
+
+  registry.set("pcodec", factory);
+  registry.set("numcodecs.pcodec", factory);
 }
