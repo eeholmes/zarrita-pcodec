@@ -3,7 +3,7 @@ export interface CodecRegistryLike {
 }
 
 export function registerPCodec(registry: CodecRegistryLike) {
-  const factory = () => import("./PCodec").then((m) => m.default);
+  const factory = () => import("./PCodec.js").then((m) => m.default);
 
   registry.set("pcodec", factory);
   registry.set("numcodecs.pcodec", factory);
