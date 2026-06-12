@@ -86,6 +86,13 @@ export interface PCodecConfig {
   configuration?: PCodecConfig;
 }
 
+interface PCodecArrayMetadata {
+  dtype?: string;
+  dataType?: string;
+  data_type?: string;
+  type?: string;
+}
+
 const formats: Record<PCodecDataType, PCodecFormat> = {
   float32: {
     decodeExport: "decompress_f32",
@@ -226,16 +233,20 @@ function normalizeDataType(value: string): PCodecDataType {
   return normalized;
 }
 
-function resolveDataType(config: PCodecConfig): PCodecDataType {
+function resolveDataType(config: PCodecConfig, meta?: PCodecArrayMetadata): PCodecDataType {
   const current = config.dtype ?? config.dataType ?? config.data_type ?? config.type;
   if (current) {
     return normalizeDataType(current);
   }
   if (config.config) {
-    return resolveDataType(config.config);
+    return resolveDataType(config.config, meta);
   }
   if (config.configuration) {
-    return resolveDataType(config.configuration);
+    return resolveDataType(config.configuration, meta);
+  }
+  const fallback = meta?.dtype ?? meta?.dataType ?? meta?.data_type ?? meta?.type;
+  if (fallback) {
+    return normalizeDataType(fallback);
   }
   throw new Error("pcodec config must include a dtype");
 }
@@ -250,12 +261,12 @@ export default class PCodec {
 
   #dataType: PCodecDataType;
 
-  constructor(config: PCodecConfig) {
-    this.#dataType = resolveDataType(config);
+  constructor(config: PCodecConfig, meta?: PCodecArrayMetadata) {
+    this.#dataType = resolveDataType(config, meta);
   }
 
-  static fromConfig(config: PCodecConfig) {
-    return new PCodec(config);
+  static fromConfig(config: PCodecConfig, meta?: PCodecArrayMetadata) {
+    return new PCodec(config, meta);
   }
 
   encode(): never {
